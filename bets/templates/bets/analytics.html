@@ -1,0 +1,29 @@
+{% extends "bets/base.html" %}
+
+{% block content %}
+<div class="header-section">
+    <h1>Analytics Overview</h1>
+</div>
+
+<div class="analytics-grid">
+    <div class="stat-card glass-panel">
+        <h3 class="stat-title">Total Bets</h3>
+        <p class="stat-main">{{ total_bets }}</p>
+    </div>
+    
+    <div class="stat-card glass-panel">
+        <h3 class="stat-title">Win Rate</h3>
+        <p class="stat-main">{{ win_rate }}%</p>
+    </div>
+    
+    <div class="stat-card glass-panel">
+        <h3 class="stat-title">Total Staked</h3>
+        <p class="stat-main">${{ total_staked|floatformat:2 }}</p>
+    </div>
+    
+    <div class="stat-card glass-panel {% if net_profit > 0 %}profit-positive{% elif net_profit < 0 %}profit-negative{% endif %}">
+        <h3 class="stat-title">Net Profit</h3>
+        <p class="stat-main">${{ net_profit|floatformat:2 }}</p>
+    </div>
+</div>
+{% endblock %}

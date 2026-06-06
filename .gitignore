@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+.env
+.env.*
+.venv/
+.venv\
+
+# Local dev/demo credentials
+demo_creds.txt
+
+# Ignore VSCode/workspace settings
+.vscode/

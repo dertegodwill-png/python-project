@@ -1,0 +1,14 @@
+{% extends "bets/base.html" %}
+
+{% block content %}
+  <h1>Place bet on: {{ outcome.match.title }} — {{ outcome.name }}</h1>
+  <p>Odds: {{ outcome.odds }}</p>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="form-actions mt-4">
+      <a href="{% url 'bets:matches' %}" class="btn btn-outline">Cancel</a>
+      <button class="btn btn-success" type="submit">Place Bet</button>
+    </div>
+  </form>
+{% endblock %}

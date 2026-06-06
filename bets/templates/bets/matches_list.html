@@ -1,0 +1,32 @@
+{% extends "bets/base.html" %}
+
+{% block content %}
+<div class="header-section">
+    <h1>Available Matches</h1>
+</div>
+
+<div class="dashboard-grid">
+    {% if matches %}
+        {% for m in matches %}
+            <div class="glass-panel bet-card">
+                <div class="bet-header">
+                    <span>MATCH ID: #{{ m.pk }}</span>
+                    <span>Starts: {{ m.start_time|date:"D, d M H:i" }}</span>
+                </div>
+                <div class="bet-desc" style="display: flex; align-items: center; justify-content: center; gap: 1rem; padding: 1.5rem 0;">
+                    <span style="flex: 1; text-align: right;">{{ m.home_team }}</span>
+                    <span class="badge" style="background: rgba(255,255,255,0.1); padding: 0.5rem 0.8rem;">VS</span>
+                    <span style="flex: 1; text-align: left;">{{ m.away_team }}</span>
+                </div>
+                <div class="mt-3">
+                    <a href="{% url 'bets:match_detail' m.pk %}" class="btn btn-primary w-100 text-center" style="display: block;">Select Match</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state glass-panel">
+            <p>No matches available at the moment. Check back soon!</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

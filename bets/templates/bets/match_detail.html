@@ -1,0 +1,42 @@
+{% extends "bets/base.html" %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="glass-panel auth-card" style="max-width: 700px;">
+        <div class="text-center mb-4">
+            <div class="stat-title">Match Detail</div>
+            <h1 class="bet-desc" style="font-size: 2rem; margin: 1rem 0;">{{ match.home_team }} vs {{ match.away_team }}</h1>
+            <p class="text-muted small">Starts: {{ match.start_time|date:"D, d M Y H:i" }}</p>
+        </div>
+
+        <h3 class="stat-title text-center mb-4">Select Your Prediction</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+            {% for o in outcomes %}
+                <div class="glass-panel text-center" style="padding: 1.5rem 1rem; border-color: {% if o.is_winner %}var(--success){% else %}var(--glass-border){% endif %};">
+                    <div class="stat-title" style="font-size: 0.8rem; margin-bottom: 0.5rem;">{{ o.name }}</div>
+                    <div class="stat-main" style="font-size: 2rem; margin-bottom: 1rem;">{{ o.odds }}</div>
+                    
+                    {% if match.finished %}
+                        {% if o.is_winner %}
+                            <span class="badge status-badge-won">Winner</span>
+                        {% else %}
+                            <span class="badge" style="background: rgba(255,255,255,0.05); color: var(--text-muted);">Lost</span>
+                        {% endif %}
+                    {% else %}
+                        {% if user.is_authenticated %}
+                            <a class="btn btn-primary w-100" href="{% url 'bets:place_bet' o.pk %}">Select</a>
+                        {% else %}
+                            <a class="btn btn-outline w-100" href="{% url 'login' %}">Login</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="mt-4 text-center">
+            <a href="{% url 'bets:matches' %}" class="btn btn-outline">Back to Matches</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

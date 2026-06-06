@@ -1,0 +1,15 @@
+{% extends "bets/base.html" %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card glass-panel">
+        <h2>Register for BetTracker</h2>
+        <form method="POST" class="auth-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+        </form>
+        <p class="auth-link">Already have an account? <a href="{% url 'login' %}">Login here</a>.</p>
+    </div>
+</div>
+{% endblock content %}

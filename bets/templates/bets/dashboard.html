@@ -1,0 +1,50 @@
+{% extends "bets/base.html" %}
+
+{% block content %}
+<div class="header-section">
+    <h1>Your Dashboard</h1>
+    <a href="{% url 'bets:matches' %}" class="btn btn-primary">+ Place New Bet</a>
+</div>
+
+<div class="dashboard-grid">
+    {% if bets %}
+        {% for bet in bets %}
+        <div class="bet-card glass-panel status-{{ bet.won|yesno:'won,lost,pending' }}">
+            <div class="bet-header">
+                <span class="bet-date">{{ bet.placed_at|date:"M d, Y" }}</span>
+                <span class="badge status-badge-{{ bet.won|yesno:'won,lost,pending' }}">
+                    {% if bet.won == True %}WON{% elif bet.won == False %}LOST{% else %}PENDING{% endif %}
+                </span>
+            </div>
+            <h3 class="bet-desc">{{ bet.outcome.match.title }} - {{ bet.outcome.name }}</h3>
+            <div class="bet-stats">
+                <div class="stat">
+                    <span class="label">Stake</span>
+                    <span class="value">${{ bet.stake }}</span>
+                </div>
+                <div class="stat">
+                    <span class="label">Odds</span>
+                    <span class="value">{{ bet.odds_at_place }}</span>
+                </div>
+                <div class="stat">
+                    <span class="label">Return</span>
+                    <span class="value">${{ bet.potential_return|floatformat:2 }}</span>
+                </div>
+            </div>
+            {% if bet.won == True %}
+                <div class="payment-status mt-2">
+                    <span class="badge {% if bet.payment_validated %}status-badge-won{% else %}status-badge-pending{% endif %}">
+                        Payment: {% if bet.payment_validated %}VALIDATED{% else %}PENDING VALIDATION{% endif %}
+                    </span>
+                </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state glass-panel">
+            <p>You haven't placed any bets yet.</p>
+            <a href="{% url 'bets:matches' %}" class="btn btn-primary mt-2">Browse Matches</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
