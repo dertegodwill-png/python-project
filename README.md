@@ -3,10 +3,6 @@
 A sleek, modern web application for tracking your sports bets, viewing your dashboard, and analyzing your betting history.
 
 ## Features
-- Track bets (stake, odds, status)
-- Interactive Dashboard
-- Profit / Loss Analytics
-- User Authentication
 
 ## Setup
 1. Create a virtual environment: `python -m venv .venv`
@@ -17,10 +13,30 @@ A sleek, modern web application for tracking your sports bets, viewing your dash
 
 ## Demo credentials (local testing)
 
-This project includes management commands to generate demo data (matches, outcomes, demo users) for local development.
+This repository includes a `render.yaml` manifest that creates a web service and a managed Postgres on Render's free plan. To deploy quickly:
 
-- Generate random matches:
+1. Sign in to https://render.com and connect your GitHub account.
+2. In Render, go to Dashboard → New → Import from GitHub and pick `dertegodwill-png/python-project`.
+3. Render will detect `render.yaml` and propose to create the web service and database. Confirm the resources.
+4. In the new service's Environment settings, set:
+	- SECRET_KEY = (paste a secure key generated locally)
+	- DEBUG = False
+	- ALLOWED_HOSTS = (the Render service URL)
+5. Click Deploy. Render will run the build and start commands defined in `render.yaml`.
 
+If you prefer to configure manually, use this build command instead:
+
+```
+pip install -r requirements.txt && python manage.py migrate --noinput && python manage.py collectstatic --noinput
+```
+
+And this start command:
+
+```
+gunicorn betting_tracker.wsgi:application --bind 0.0.0.0:$PORT
+```
+
+After deployment, open the service URL and run `createsuperuser` from the Render Shell to create an admin account.
 	`python manage.py generate_matches --count 10`
 
 - Create demo users and write credentials to `demo_creds.txt`:

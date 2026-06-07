@@ -1,0 +1,14 @@
+services:
+  - name: python-project-web
+    type: web
+    env: python
+    plan: free
+    repo: dertegodwill-png/python-project
+    branch: main
+    buildCommand: pip install -r requirements.txt && python manage.py migrate --noinput && python manage.py collectstatic --noinput
+    startCommand: gunicorn betting_tracker.wsgi:application --bind 0.0.0.0:$PORT
+
+databases:
+  - name: python-project-db
+    engine: postgres
+    plan: free
