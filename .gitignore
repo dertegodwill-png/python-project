@@ -12,3 +12,19 @@ demo_creds.txt
 
 # Ignore VSCode/workspace settings
 .vscode/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+db.sqlite3
+/staticfiles/
+media/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+.env
+demo_creds.txt
+*.pem
+*.key
