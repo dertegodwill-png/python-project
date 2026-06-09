@@ -1,1 +1,1 @@
-﻿web: gunicorn betting_tracker.wsgi:application
+﻿web: sh ./start.sh
