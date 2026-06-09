@@ -17,9 +17,12 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from . import views as project_views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("bets.urls")),
     path("users/", include("users.urls")),
+    # Lightweight health check used by Railway and other platforms
+    path("healthz", project_views.healthz, name="healthz"),
 ]
