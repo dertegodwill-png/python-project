@@ -112,6 +112,18 @@ DATABASES = {
     }
 }
 
+# If a DATABASE_URL is provided (e.g., by Render), configure the DB from it.
+# This allows easy switching to Postgres in production while keeping SQLite for dev.
+try:
+    import dj_database_url
+
+    DATABASE_URL = os.environ.get('DATABASE_URL')
+    if DATABASE_URL:
+        DATABASES['default'] = dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
+except Exception:
+    # dj-database-url may not be installed in some dev environments; fall back to SQLite
+    pass
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
