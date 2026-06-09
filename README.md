@@ -62,3 +62,38 @@ Environment variables to set in Railway for production:
 - `DATABASE_URL` (if using Postgres plugin)
 
 Watch the service logs for the migration output on startup to ensure tables are created. Also monitor the size of `db.sqlite3` (e.g., via Railway filesystem metrics or by periodically checking in the Railway console) to avoid hitting the 500 MB cap.
+
+Migrate to Postgres (when needed)
+---------------------------------
+
+When your data grows beyond the persistent volume limits or you want a production-grade DB, follow these steps to move from SQLite to Postgres.
+
+1. Locally, export your data into a portable fixture:
+
+```bash
+python manage.py dumpdata --natural-primary --natural-foreign --indent 2 > data.json
+```
+
+2. Commit `data.json` temporarily or keep it locally. Then add a Postgres plugin to your Railway project and note the `DATABASE_URL` Railway provides.
+
+3. Set the `DATABASE_URL` environment variable on the Railway service (or in your local `.env` for testing). Redeploy so migrations run against Postgres.
+
+4. From the Railway console (or SSH/shell), load the data into Postgres:
+
+```bash
+python manage.py loaddata data.json
+```
+
+5. Verify data integrity by checking a few rows in Admin or via the Django shell:
+
+```bash
+python manage.py shell
+>>> from bets.models import Match
+>>> Match.objects.count()
+```
+
+6. After verifying, remove any local `db.sqlite3` references and the `data.json` fixture if sensitive.
+
+Notes:
+- If you have custom SQL or complex migrations, test the process in a staging environment first.
+- For large datasets, consider `pgloader` or `pg_dump`/`pg_restore` pipelines instead of fixtures.
