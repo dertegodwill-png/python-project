@@ -97,3 +97,22 @@ python manage.py shell
 Notes:
 - If you have custom SQL or complex migrations, test the process in a staging environment first.
 - For large datasets, consider `pgloader` or `pg_dump`/`pg_restore` pipelines instead of fixtures.
+
+Automated migration helper
+--------------------------
+
+This project includes a management command to simplify migrating data to Postgres:
+
+Export locally:
+
+```bash
+python manage.py migrate_to_postgres --export-file data.json
+```
+
+Upload `data.json` to your Railway project (or keep it locally), attach a Postgres plugin, set `DATABASE_URL` in the Railway service, redeploy to run migrations, then load the data on the remote container:
+
+```bash
+python manage.py migrate_to_postgres --load --export-file data.json
+```
+
+The command is a convenience wrapper around `dumpdata`/`loaddata` and prints size/confirmation messages. It's not a substitute for careful testing on large datasets; use it for small-to-medium sized datasets and test in staging first.
