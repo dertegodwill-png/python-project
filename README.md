@@ -46,3 +46,19 @@ After deployment, open the service URL and run `createsuperuser` from the Render
 	The command writes `demo_creds.txt` containing lines like `alice:random_password` and verifies the credentials by attempting to log in.
 
 Security note: `demo_creds.txt` contains plaintext passwords and is intended only for local development. Do not commit it to source control or leave it on production machines. Delete it after testing or move credentials into a secure secrets manager.
+
+Railway deployment notes
+-----------------------
+
+If deploying to Railway and you want to use the bundled SQLite DB, attach a persistent volume of at least 1GB and mount it at `/app` so `db.sqlite3` survives future deploys. Alternatively attach a Postgres plugin and set `DATABASE_URL` in the service environment.
+
+This project includes `start.sh` which runs `python manage.py migrate --noinput` and `python manage.py collectstatic --noinput` on startup before launching Gunicorn. The `Procfile` is updated to call `start.sh` so migrations will run automatically at boot.
+
+Environment variables to set in Railway for production:
+
+- `SECRET_KEY` (required, >=50 chars)
+- `DEBUG` = False
+- `ALLOWED_HOSTS` = yourservice.up.railway.app
+- `DATABASE_URL` (if using Postgres plugin)
+
+Watch the service logs for the migration output on startup to ensure tables are created.
