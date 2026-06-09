@@ -50,7 +50,7 @@ Security note: `demo_creds.txt` contains plaintext passwords and is intended onl
 Railway deployment notes
 -----------------------
 
-If deploying to Railway and you want to use the bundled SQLite DB, attach a persistent volume of at least 1GB and mount it at `/app` so `db.sqlite3` survives future deploys. Alternatively attach a Postgres plugin and set `DATABASE_URL` in the service environment.
+If deploying to Railway and you want to use the bundled SQLite DB, you can attach a persistent volume and mount it at `/app` so `db.sqlite3` survives future deploys. Note: on the current Railway free plan the maximum allowed persistent volume is 500 MB — this repository is configured to work with a 500 MB volume by compacting the SQLite file at startup using VACUUM. If you need a larger volume, upgrade your Railway plan or use Postgres (recommended for production).
 
 This project includes `start.sh` which runs `python manage.py migrate --noinput` and `python manage.py collectstatic --noinput` on startup before launching Gunicorn. The `Procfile` is updated to call `start.sh` so migrations will run automatically at boot.
 
@@ -61,4 +61,4 @@ Environment variables to set in Railway for production:
 - `ALLOWED_HOSTS` = yourservice.up.railway.app
 - `DATABASE_URL` (if using Postgres plugin)
 
-Watch the service logs for the migration output on startup to ensure tables are created.
+Watch the service logs for the migration output on startup to ensure tables are created. Also monitor the size of `db.sqlite3` (e.g., via Railway filesystem metrics or by periodically checking in the Railway console) to avoid hitting the 500 MB cap.
